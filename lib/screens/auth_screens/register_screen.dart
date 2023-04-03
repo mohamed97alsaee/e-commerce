@@ -229,15 +229,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       isActive: buttonEnabled && agreed,
                       inProgress: false,
                       text: AppLocalizations.of(context)!.createaccount,
-                      onPressed: () async {
-                      await auth
+                      onPressed: () {
+                        auth
                             .createUserWithEmailAndPassword(
                                 email: emailController.text,
                                 password: passwordController.text)
-                            .then((value) async {
-                          firestore.collection('useers').add({
-                            "uid": value.user!.uid,
-                            "email": value.user!.uid,
+                            .then((value) {
+                          firestore.collection('users').add({
+                            "uid": auth.currentUser!.uid,
+                            "email": emailController.text,
                             "firstName": firstNameController.text,
                           });
                         });
