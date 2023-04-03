@@ -41,11 +41,6 @@ PODS:
   - Firebase/Messaging (10.7.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 10.7.0)
-  - firebase_app_check (0.1.2):
-    - Firebase/CoreOnly (~> 10.7.0)
-    - firebase_core
-    - FirebaseAppCheck (~> 10.7.0-beta)
-    - Flutter
   - firebase_auth (4.4.0):
     - Firebase/Auth (= 10.7.0)
     - firebase_core
@@ -57,10 +52,6 @@ PODS:
     - Firebase/Messaging (= 10.7.0)
     - firebase_core
     - Flutter
-  - FirebaseAppCheck (10.7.0):
-    - FirebaseCore (~> 10.0)
-    - GoogleUtilities/Environment (~> 7.8)
-    - PromisesObjC (~> 2.1)
   - FirebaseAuth (10.7.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
@@ -140,7 +131,6 @@ PODS:
 
 DEPENDENCIES:
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
-  - firebase_app_check (from `.symlinks/plugins/firebase_app_check/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
@@ -159,7 +149,6 @@ SPEC REPOS:
     - DKImagePickerController
     - DKPhotoGallery
     - Firebase
-    - FirebaseAppCheck
     - FirebaseAuth
     - FirebaseCore
     - FirebaseCoreInternal
@@ -176,8 +165,6 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
-  firebase_app_check:
-    :path: ".symlinks/plugins/firebase_app_check/ios"
   firebase_auth:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
@@ -208,11 +195,9 @@ SPEC CHECKSUMS:
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: ce3938a0df3cc1ef404671531facef740d03f920
   Firebase: 0219acf760880eeec8ce479895bd7767466d9f81
-  firebase_app_check: ea42c4a4300cb9949584cd37202edd7bab6c539d
   firebase_auth: 5984ebaf5463319e304ab1c0966b06994bd1c69a
   firebase_core: d85432877e814811e040e7659f9c82faeab66e04
   firebase_messaging: 45c0514ca78426630338a42fb7b55af962c7ccd2
-  FirebaseAppCheck: 81143f6f973d277962b71e16c63068a8f4a755dc
   FirebaseAuth: dd64c01631df724b09f33e584625775c52f7d71f
   FirebaseCore: e317665b9d744727a97e623edbbed009320afdd7
   FirebaseCoreInternal: 8845798510aae74703467480f71ac613788d0696

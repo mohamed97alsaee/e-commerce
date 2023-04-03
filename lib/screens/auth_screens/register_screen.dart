@@ -1,11 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import '../../helpers/consts.dart';
-import '../../main.dart';
-import '../../providers/auth_provider.dart';
 import '../../providers/dark_theme_provider.dart';
 import 'package:flutter/material.dart';
 
@@ -13,8 +10,6 @@ import '../../widgets/clickable_widgets/clickacble_text_widget.dart';
 import '../../widgets/clickable_widgets/main_button_widget.dart';
 import '../../widgets/input_widgets/text_field_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import '../handling_screens/otp_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -24,13 +19,14 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   final GlobalKey<FormState> registerForm = GlobalKey<FormState>();
 
   final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
 
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
 
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController passwordConfirmationController =
@@ -116,19 +112,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       },
                       onchanged: () {}),
                   TextFieldWidget(
-                      controller: lastNameController,
-                      hintText: AppLocalizations.of(context)!.lastname,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "${AppLocalizations.of(context)!.please} ${AppLocalizations.of(context)!.enter} ${AppLocalizations.of(context)!.lastname}";
-                        }
-                        if (value.length < 2) {
-                          return AppLocalizations.of(context)!.nmb2cal;
-                        }
-                        return null;
-                      },
-                      onchanged: () {}),
-                  TextFieldWidget(
                       controller: emailController,
                       hintText: AppLocalizations.of(context)!.emailaddress,
                       validator: (String? value) {
@@ -137,44 +120,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         }
                         if (!value.contains("@") || !value.contains(".com")) {
                           return "${AppLocalizations.of(context)!.please} ${AppLocalizations.of(context)!.enter} ${AppLocalizations.of(context)!.validemailaddress}";
-                        }
-                        return null;
-                      },
-                      onchanged: () {}),
-                  TextFieldWidget(
-                      suffix: Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 1,
-                              height: size.height * 0.025,
-                              color: Colors.grey,
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            const Text(
-                              "+218",
-                              textDirection: TextDirection.ltr,
-                              style: TextStyle(
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      keyboard: TextInputType.phone,
-                      controller: phoneController,
-                      hintText: "92XXXXXXX",
-                      isPhone: true,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return AppLocalizations.of(context)!.please +
-                              AppLocalizations.of(context)!.eypn;
-                        }
-                        if (value.length != 9) {
-                          return AppLocalizations.of(context)!.pnmb9d;
                         }
                         return null;
                       },
@@ -280,54 +225,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ],
                     ),
                   ),
-                  Consumer<AuthProvider>(
-                      builder: (context, authProvider, child) {
-                    return MainButton(
-                        isActive: buttonEnabled && agreed,
-                        inProgress: authProvider.isLoading,
-                        text: AppLocalizations.of(context)!.createaccount,
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => OtpScreen(
-                                      phoneNumber: phoneController.text,
-                                      onNext: () {
-                                        Provider.of<AuthProvider>(context,
-                                                listen: false)
-                                            .register({
-                                          "phone": phoneController.text,
-                                          "password": passwordController.text,
-                                          "password_confirmation":
-                                              passwordConfirmationController
-                                                  .text,
-                                          "first_name":
-                                              firstNameController.text,
-                                          "last_name": lastNameController.text,
-                                          "email": emailController.text,
-                                          "fcm_token": FirebaseMessaging
-                                              .instance
-                                              .getToken()
-                                              .toString(),
-                                          "firebase_uid": FirebaseAuth
-                                              .instance.currentUser!.uid,
-                                        }, context).then((registered) {
-                                          if (registered) {
-                                            Navigator.pushAndRemoveUntil(
-                                                context,
-                                                CupertinoPageRoute(
-                                                    builder: (context) =>
-                                                        const ScreenRouter()),
-                                                (route) => false);
-                                          } else {
-                                            Navigator.pop(context);
-                                          }
-                                        });
-                                      },
-                                      nextBtnText: AppLocalizations.of(context)!
-                                          .createaccount)));
+                  MainButton(
+                      isActive: buttonEnabled && agreed,
+                      inProgress: false,
+                      text: AppLocalizations.of(context)!.createaccount,
+                      onPressed: () async {
+                      await auth
+                            .createUserWithEmailAndPassword(
+                                email: emailController.text,
+                                password: passwordController.text)
+                            .then((value) async {
+                          firestore.collection('useers').add({
+                            "uid": value.user!.uid,
+                            "email": value.user!.uid,
+                            "firstName": firstNameController.text,
+                          });
                         });
-                  }),
+                      }),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 30, vertical: 15),

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +27,10 @@ class DrawerWidget extends StatefulWidget {
 }
 
 class _DrawerWidgetState extends State<DrawerWidget> {
+  FirebaseAuth auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    // final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final themeFunctions =
         Provider.of<DarkThemeProvider>(context, listen: false);
     final themeListener = Provider.of<DarkThemeProvider>(context, listen: true);
@@ -45,7 +47,9 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  authProvider.status == Status.authenticated
+                  // authProvider.status == Status.authenticated
+
+                  auth.currentUser != null
                       ? Column(
                           children: [
                             // Padding(
@@ -436,21 +440,22 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                         ),
                   Column(
                     children: [
-                      authProvider.status == Status.authenticated
+                      auth.currentUser != null
                           ? DrawerTile(
                               title: AppLocalizations.of(context)!.logout,
                               icon: FontAwesomeIcons.rightFromBracket,
                               onPressed: () async {
-                                authProvider.logOut().then((value) {
-                                  value
-                                      ? Navigator.pushAndRemoveUntil(
-                                          context,
-                                          CupertinoPageRoute(
-                                              builder: ((context) =>
-                                                  const MyApp())),
-                                          (route) => false)
-                                      : Navigator.pop(context);
-                                });
+                                auth.signOut();
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: ((context) => const MyApp())),
+                                    (route) => false);
+                                // authProvider.logOut().then((value) {
+                                //   value ?
+
+                                //       : Navigator.pop(context);
+                                // });
                               },
                               withDivider: false,
                             )

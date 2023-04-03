@@ -1,4 +1,5 @@
 import 'package:e_commerce/screens/auth_screens/register_screen.dart';
+import 'package:e_commerce/widgets/dialogs/custom_flushbar_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,10 +25,11 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> loginForm = GlobalKey<FormState>();
-  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool showPassword = true;
   bool buttonEnabled = false;
+  FirebaseAuth auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -35,6 +37,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final themeListener = Provider.of<DarkThemeProvider>(context, listen: true);
 
     return Scaffold(
+        floatingActionButton: FloatingActionButton(onPressed: () {
+          showCustomFlushbar("Flush ", Colors.red, Icons.abc, context);
+        }),
         appBar: AppBar(),
         body: SafeArea(
           child: Form(
@@ -93,41 +98,53 @@ class _LoginScreenState extends State<LoginScreen> {
                       textAlign: TextAlign.center,
                     ),
                   ),
+                  // TextFieldWidget(
+                  //     suffix: Directionality(
+                  //       textDirection: TextDirection.rtl,
+                  //       child: Row(
+                  //         children: [
+                  //           Container(
+                  //             width: 1,
+                  //             height: size.height * 0.025,
+                  //             color: Colors.grey,
+                  //           ),
+                  //           const SizedBox(
+                  //             width: 5,
+                  //           ),
+                  //           const Text(
+                  //             "+218",
+                  //             textDirection: TextDirection.ltr,
+                  //             style: TextStyle(
+                  //               color: Colors.grey,
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     keyboard: TextInputType.phone,
+                  //     controller: emailController,
+                  //     hintText: "92XXXXXXX",
+                  //     isPhone: true,
+                  //     validator: (value) {
+                  //       if (value!.isEmpty) {
+                  //         return AppLocalizations.of(context)!.please +
+                  //             AppLocalizations.of(context)!.eypn;
+                  //       }
+                  //       if (value.length != 9) {
+                  //         return AppLocalizations.of(context)!.pnmb9d;
+                  //       }
+                  //       return null;
+                  //     },
+                  //     onchanged: () {}),
+
                   TextFieldWidget(
-                      suffix: Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 1,
-                              height: size.height * 0.025,
-                              color: Colors.grey,
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            const Text(
-                              "+218",
-                              textDirection: TextDirection.ltr,
-                              style: TextStyle(
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      keyboard: TextInputType.phone,
-                      controller: phoneController,
-                      hintText: "92XXXXXXX",
-                      isPhone: true,
-                      validator: (value) {
+                      controller: emailController,
+                      hintText: AppLocalizations.of(context)!.email,
+                      validator: (String? value) {
                         if (value!.isEmpty) {
-                          return AppLocalizations.of(context)!.please +
-                              AppLocalizations.of(context)!.eypn;
+                          return "${AppLocalizations.of(context)!.please} ${AppLocalizations.of(context)!.enter} ${AppLocalizations.of(context)!.email}";
                         }
-                        if (value.length != 9) {
-                          return AppLocalizations.of(context)!.pnmb9d;
-                        }
+
                         return null;
                       },
                       onchanged: () {}),
@@ -178,43 +195,40 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                   ),
-                  Consumer<AuthProvider>(
-                      builder: (context, authProvider, child) {
-                    return MainButton(
-                        isActive: buttonEnabled,
-                        inProgress: authProvider.isLoading,
-                        text: AppLocalizations.of(context)!.signin,
-                        onPressed: () {
-                          Navigator.push(
+                  MainButton(
+                      isActive: buttonEnabled,
+                      inProgress: false,
+                      text: AppLocalizations.of(context)!.signin,
+                      onPressed: () {
+                        auth
+                            .signInWithEmailAndPassword(
+                                email: emailController.text,
+                                password: passwordController.text)
+                            .then((value) async {
+                          Navigator.pushAndRemoveUntil(
                               context,
                               CupertinoPageRoute(
-                                  builder: (context) => OtpScreen(
-                                        nextBtnText:
-                                            AppLocalizations.of(context)!
-                                                .signin,
-                                        onNext: () {
-                                          authProvider.login({
-                                            "phone": phoneController.text,
-                                            "password": passwordController.text,
-                                            "firebase_uid": FirebaseAuth
-                                                .instance.currentUser!.uid,
-                                          }, context).then((logedIn) {
-                                            if (logedIn) {
-                                              Navigator.pushAndRemoveUntil(
-                                                  context,
-                                                  CupertinoPageRoute(
-                                                      builder: (context) =>
-                                                          const ScreenRouter()),
-                                                  (route) => false);
-                                            } else {
-                                              Navigator.pop(context);
-                                            }
-                                          });
-                                        },
-                                        phoneNumber: phoneController.text,
-                                      )));
+                                  builder: (context) => const MyApp()),
+                              (route) => false);
                         });
-                  }),
+                      }),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  // MainButton(
+                  //     isActive: true,
+                  //     withBorder: true,
+                  //     inProgress: false,
+                  //     text: AppLocalizations.of(context)!.skip,
+                  //     onPressed: () async {
+                  // await auth.signInAnonymously().then((value) {
+                  //   Navigator.pushAndRemoveUntil(
+                  //       context,
+                  //       CupertinoPageRoute(
+                  //           builder: (context) => const MyApp()),
+                  //       (route) => false);
+                  // });
+                  //     }),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 30, vertical: 15),

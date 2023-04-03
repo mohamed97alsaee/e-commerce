@@ -22,7 +22,7 @@ class _SuccessOrderScreenState extends State<SuccessOrderScreen> {
     Timer(const Duration(seconds: 5), () {
       Navigator.pushAndRemoveUntil(
           context,
-          CupertinoPageRoute(builder: (context) => const ScreenRouter()),
+          CupertinoPageRoute(builder: (context) => const MyApp()),
           (route) => false);
     });
     super.initState();

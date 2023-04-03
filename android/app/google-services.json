@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "409072594193",
+    "project_id": "lati-e-commece",
+    "storage_bucket": "lati-e-commece.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:409072594193:android:a9cbedf8fa7dd78c50f0b0",
+        "android_client_info": {
+          "package_name": "com.example.e_commerce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "409072594193-q65bvrc0spqh8atbghvqtmui14ls1vca.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.e_commerce",
+            "certificate_hash": "11277bf512551cbb638b851d5eec90fb7cbdf4d6"
+          }
+        },
+        {
+          "client_id": "409072594193-9ke9goea5aeprcnr2id0h22ggp8o7kkg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSaR-aSqYKpbkQVocB0w3-lVIKdYTI7J4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "409072594193-9ke9goea5aeprcnr2id0h22ggp8o7kkg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

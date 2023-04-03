@@ -59,7 +59,8 @@ dependencies:
   flutter_native_image:
   image_picker:
   geolocator:
-  firebase_app_check:
+  cloud_firestore:
+  # firebase_app_check:
 dev_dependencies:
   flutter_test:
     sdk: flutter

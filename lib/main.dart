@@ -1,20 +1,26 @@
 import 'package:e_commerce/providers/dark_theme_provider.dart';
 import 'package:e_commerce/screens/auth_screens/intro_screen.dart';
+import 'package:e_commerce/screens/auth_screens/splash_screen.dart';
 import 'package:e_commerce/screens/main_screens/tabs_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import './screens/handling_screens/loading_screen.dart';
-import 'package:e_commerce/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'helpers/consts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-void main() {
+Future<void> main() async {
+  // await Firebase.initializeApp();
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
@@ -30,6 +36,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  FirebaseAuth auth = FirebaseAuth.instance;
   Locale _locale = const Locale('ar');
 
   void setLocale(Locale locale) {
@@ -69,8 +76,8 @@ class _MyAppState extends State<MyApp> {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AuthProvider>(
-            create: (BuildContext context) => AuthProvider()),
+        // ChangeNotifierProvider<AuthProvider>(
+        //     create: (BuildContext context) => AuthProvider()),
         ChangeNotifierProvider<DarkThemeProvider>(
           create: (_) {
             return DarkThemeProvider();
@@ -215,59 +222,64 @@ class _MyAppState extends State<MyApp> {
               elevation: 0,
             ),
           ),
-          home: const ScreenRouter(),
+          home: auth.currentUser != null
+              ? const TabsScreen()
+              : const IntroScreen(),
         );
       }),
     );
   }
 }
 
-class ScreenRouter extends StatefulWidget {
-  const ScreenRouter({Key? key, this.fromRegister = false}) : super(key: key);
-  final bool fromRegister;
+// class ScreenRouter extends StatefulWidget {
+//   const ScreenRouter({Key? key, this.fromRegister = false}) : super(key: key);
+//   final bool fromRegister;
 
-  @override
-  State<ScreenRouter> createState() => _ScreenRouterState();
-}
+//   @override
+//   State<ScreenRouter> createState() => _ScreenRouterState();
+// }
 
-class _ScreenRouterState extends State<ScreenRouter> {
-  @override
-  void initState() {
-    // onMessageListen(context);
-    // Remove when make noification list request
-    // onMessageOpenedApp(context);
-    Provider.of<DarkThemeProvider>(context, listen: false).setMode();
+// class _ScreenRouterState extends State<ScreenRouter> {
+//   @override
+//   void initState() {
+//     // onMessageListen(context);
+//     // Remove when make noification list request
+//     // onMessageOpenedApp(context);
+//     Provider.of<DarkThemeProvider>(context, listen: false).setMode();
 
-    super.initState();
-  }
+//     super.initState();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-    authProvider.initAuthProvider();
+//   @override
+//   Widget build(BuildContext context) {
+//     final authProvider = Provider.of<AuthProvider>(context);
+//     authProvider.initAuthProvider();
 
-    return Scaffold(
-      body: Consumer<AuthProvider>(
-        builder: (
-          context,
-          authProvider,
-          child,
-        ) {
-          switch (authProvider.status) {
-            case Status.authenticating:
-              return const LoadingScreen();
-            case Status.uninitialized:
-              return const LoadingScreen();
-            case Status.authenticated:
-              return const TabsScreen();
-            case Status.unauthenticated:
-              return const IntroScreen();
+//     return Scaffold(
+//       body: Consumer<AuthProvider>(
+//         builder: (
+//           context,
+//           authProvider,
+//           child,
+//         ) {
+//           switch (authProvider.status) {
+//             case Status.authenticating:
+//               return const LoadingScreen();
+//             case Status.uninitialized:
+//               return const LoadingScreen();
+//             case Status.authenticated:
+//               return const TabsScreen();
+//             case Status.unauthenticated:
+//               return const IntroScreen();
 
-            default:
-              return const IntroScreen();
-          }
-        },
-      ),
-    );
-  }
-}
+//             default:
+//               return const IntroScreen();
+//           }
+//         },
+//       ),
+//     );
+//   }
+// }
+   
+
+
