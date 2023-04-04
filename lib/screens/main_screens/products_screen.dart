@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
 import '../../helpers/consts.dart';
@@ -21,14 +22,26 @@ class _ProductsScreenState extends State<ProductsScreen> {
   TextEditingController searchController = TextEditingController();
 
   int filterIndex = 0;
-  List filterList = [
-    {"title": "All"},
-    {"title": "Phones"},
-    {"title": "Cards"},
-    {"title": "Ear phones"},
-    {"title": "Lenses"},
-    {"title": "Xiaomi redmi"},
-  ];
+
+
+   
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  List filterList = [];
+
+  getCats() {
+    firestore.collection('categories').get().then((data) {
+      for (var element in data.docs) {
+        filterList.add(element.data());
+      }
+      setState(() {});
+    });
+  }
+
+  @override
+  void initState() {
+    getCats();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +127,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             filterIndex = index;
                           });
                         },
-                        title: filterList[index]["title"],
+                        title: AppLocalizations.of(context)!.localeName == "ar"
+                            ? filterList[index]["name_ar"]
+                            : filterList[index]["name_en"],
                       );
                     },
                     itemCount: filterList

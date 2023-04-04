@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_commerce/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import '../../helpers/consts.dart';
@@ -239,6 +241,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             "uid": auth.currentUser!.uid,
                             "email": emailController.text,
                             "firstName": firstNameController.text,
+                          }).then((value) {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => const MyApp()),
+                                (route) => false);
                           });
                         });
                       }),
