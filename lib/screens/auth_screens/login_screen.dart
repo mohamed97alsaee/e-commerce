@@ -8,12 +8,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../helpers/consts.dart';
 import '../../main.dart';
-import '../../providers/auth_provider.dart';
 import '../../providers/dark_theme_provider.dart';
 import '../../widgets/clickable_widgets/clickacble_text_widget.dart';
 import '../../widgets/clickable_widgets/main_button_widget.dart';
 import '../../widgets/input_widgets/text_field_widget.dart';
-import '../handling_screens/otp_screen.dart';
 import 'forget_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {

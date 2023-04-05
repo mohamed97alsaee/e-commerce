@@ -8,7 +8,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../helpers/consts.dart';
 import '../../../main.dart';
-import '../../../providers/auth_provider.dart';
 import '../../../providers/dark_theme_provider.dart';
 import '../../helpers/functions_helper.dart';
 import '../../screens/auth_screens/login_screen.dart';
