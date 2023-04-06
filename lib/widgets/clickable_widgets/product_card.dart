@@ -1,3 +1,4 @@
+import 'package:e_commerce/models/product_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,8 +11,8 @@ import '../dialogs/custom_flushbar_widget.dart';
 import 'main_button_widget.dart';
 
 class ProductCard extends StatefulWidget {
-  const ProductCard({super.key});
-
+  const ProductCard({super.key, required this.productModel});
+  final ProductModel productModel;
   @override
   State<ProductCard> createState() => _ProductCardState();
 }
@@ -49,8 +50,8 @@ class _ProductCardState extends State<ProductCard> {
                   height: 100,
                   width: 100,
                   child: Image.network(
-                    'https://www.freepnglogos.com/uploads/iphone-png/the-iphone-ten-png-3.png',
-                    fit: BoxFit.cover,
+                    widget.productModel.imageUrl,
+                    fit: BoxFit.contain,
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) return child;
                       return Center(
@@ -76,7 +77,9 @@ class _ProductCardState extends State<ProductCard> {
                 Row(
                   children: [
                     Text(
-                      "product name",
+                      AppLocalizations.of(context)!.localeName == 'ar'
+                          ? widget.productModel.nameAr
+                          : widget.productModel.nameEn,
                       style: TextStyle(
                           color: themeListener.isDark
                               ? lightWihteColor
@@ -89,7 +92,7 @@ class _ProductCardState extends State<ProductCard> {
                 Row(
                   children: [
                     Text(
-                      "98 ${AppLocalizations.of(context)!.lyd}",
+                      "${widget.productModel.price} ${AppLocalizations.of(context)!.lyd}",
                       style: TextStyle(
                           color: themeListener.isDark
                               ? lightWihteColor

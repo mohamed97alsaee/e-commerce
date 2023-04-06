@@ -6,20 +6,24 @@ import 'dart:convert';
 
 class CategoryModel {
     CategoryModel({
-       required this.name,
+       required this.nameAr,
+       required this.nameEn,
     });
 
-    String name;
+    String nameAr;
+    String nameEn;
 
     factory CategoryModel.fromRawJson(String str) => CategoryModel.fromJson(json.decode(str));
 
     String toRawJson() => json.encode(toJson());
 
     factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
-        name: json["name"],
+        nameAr: json["name_ar"],
+        nameEn: json["name_en"],
     );
 
     Map<String, dynamic> toJson() => {
-        "name": name,
+        "name_ar": nameAr,
+        "name_en": nameEn,
     };
 }

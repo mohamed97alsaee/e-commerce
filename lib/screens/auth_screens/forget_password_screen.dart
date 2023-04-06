@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 
@@ -18,8 +19,11 @@ class ForgetPasswordScreen extends StatefulWidget {
 }
 
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
+  FirebaseAuth auth = FirebaseAuth.instance;
+
   final GlobalKey<FormState> forgetPassPhoneForm = GlobalKey<FormState>();
   final GlobalKey<FormState> forgetNewPassForm = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
 
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -98,40 +102,13 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                             ),
                           ),
                           TextFieldWidget(
-                              suffix: Directionality(
-                                textDirection: TextDirection.rtl,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 1,
-                                      height: size.height * 0.025,
-                                      color: Colors.grey,
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    const Text(
-                                      "+218",
-                                      textDirection: TextDirection.ltr,
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              controller: phoneController,
-                              keyboard: TextInputType.phone,
-                              hintText: "92XXXXXXX",
-                              isPhone: true,
-                              validator: (value) {
+                              controller: emailController,
+                              hintText: AppLocalizations.of(context)!.email,
+                              validator: (String? value) {
                                 if (value!.isEmpty) {
-                                  return AppLocalizations.of(context)!.please +
-                                      AppLocalizations.of(context)!.eypn;
+                                  return "${AppLocalizations.of(context)!.please} ${AppLocalizations.of(context)!.enter} ${AppLocalizations.of(context)!.email}";
                                 }
-                                if (value.length != 9) {
-                                  return AppLocalizations.of(context)!.pnmb9d;
-                                }
+
                                 return null;
                               },
                               onchanged: () {}),
@@ -142,8 +119,11 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                               isActive: phoneButtonEnabled,
                               text: AppLocalizations.of(context)!.continuue,
                               onPressed: () {
-                                setState(() {
-                                  currentStep++;
+                                auth
+                                    .sendPasswordResetEmail(
+                                        email: emailController.text)
+                                    .then((value) {
+                                  Navigator.pop(context);
                                 });
                               })
                         ],
@@ -290,10 +270,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                   text: AppLocalizations.of(context)!
                                       .resetpassword,
                                   onPressed: () {
-                                    if (kDebugMode) {
-                                      print("SEND REQUEST");
-                                    }
-                                    Navigator.pop(context);
+                                    // auth.sendPasswordResetEmail(
+                                    //     email: emailController.text);
                                   })
                             ],
                           ),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/screens/main_screens/wallet_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -6,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../helpers/consts.dart';
+import '../../models/product_model.dart';
 import '../../providers/dark_theme_provider.dart';
 import '../../widgets/clickable_widgets/cart_button.dart';
 import '../../widgets/static_widgets/custom_drawer_widget.dart';
@@ -31,6 +33,29 @@ class _TabsScreenState extends State<TabsScreen> {
     return Scaffold(
         // key: _scaffoldKey,
         // floatingActionButton: const DebuggingButtons(),
+        //
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     FirebaseFirestore firestore = FirebaseFirestore.instance;
+        //     firestore
+        //         .collection('products')
+        //         .add(ProductModel(
+        //                 categoryUid: 'sOk0HL3usOwj6xC8svo7',
+        //                 imageUrl:
+        //                     'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/MPLT3ref_VW_34FR+watch-45-alum-midnight-cell-8s_VW_34FR_WF_CO?wid=1400&hei=1400&trim=1%2C0&fmt=p-jpg&qlt=95&.v=1660778409162%2C1661968677801',
+        //                 nameAr: "ساعة أبل",
+        //                 nameEn: 'Apple Watch',
+        //                 price: '1950')
+        //             .toJson())
+        //         .then((value) {
+        //       if (kDebugMode) {
+        //         print(value.id);
+        //       }
+        //     });
+        //   },
+        //   child: const Icon(Icons.add),
+        // ),
+        //
         appBar: AppBar(
           // leading: IconButton(
           //     icon: FaIcon(
