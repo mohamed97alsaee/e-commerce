@@ -1,8 +1,10 @@
 import 'package:e_commerce/providers/dark_theme_provider.dart';
+import 'package:e_commerce/providers/products_provider.dart';
 import 'package:e_commerce/screens/auth_screens/intro_screen.dart';
 import 'package:e_commerce/screens/main_screens/tabs_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,11 +16,14 @@ import 'package:flutter/material.dart';
 import 'helpers/consts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'helpers/notifications_helper.dart';
+
 Future<void> main() async {
   // await Firebase.initializeApp();
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   runApp(const MyApp());
 }
@@ -80,6 +85,11 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<DarkThemeProvider>(
           create: (_) {
             return DarkThemeProvider();
+          },
+        ),
+        ChangeNotifierProvider<ProductsProvider>(
+          create: (_) {
+            return ProductsProvider();
           },
         ),
       ],
